@@ -111,7 +111,7 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
 @media (max-width:420px){ .stat .value{ font-size:20px } }
 
 .routine{
-  display:flex; align-items:center; gap:12px; padding:12px 4px;
+  display:flex; align-items:center; gap:10px; padding:12px 4px;
   border-bottom:1px solid var(--line);
 }
 .routine:last-child{ border-bottom:0 }
@@ -129,17 +129,21 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
   content:""; position:absolute; left:4px; top:1px; width:4px; height:8px;
   border:solid var(--accent); border-width:0 2px 2px 0; transform:rotate(40deg);
 }
-.routine .name{ flex:1; font-size:15px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.routine .name{ flex:1; font-size:15px; min-width:0; overflow:hidden }
+.routine .name .nm{ display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.routine .name .days-note{ display:block; font-size:10.5px; color:var(--muted); margin-top:1px }
 .week-dots{ display:flex; gap:4px; flex-shrink:0 }
 .week-dots i{ width:7px; height:7px; border-radius:50%; background:var(--line) }
+.week-dots i.off{ opacity:.25 }
 .week-dots i.d1{ background:var(--doing) }
 .week-dots i.d2{ background:var(--accent) }
 .week-dots i.today{ outline:1.5px solid var(--accent); outline-offset:1.5px }
-.del{
+@media (max-width:400px){ .week-dots{ display:none } }
+.icon-btn{
   flex-shrink:0; width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
-  color:var(--muted); font-size:16px;
+  color:var(--muted); font-size:15px;
 }
-.del:hover{ background:var(--accent-soft); color:var(--ink) }
+.icon-btn:hover{ background:var(--accent-soft); color:var(--ink) }
 .add-row{ display:flex; gap:8px; margin-top:14px }
 .add-row input{
   flex:1; padding:10px 14px; border-radius:var(--r-md); border:1px solid var(--line);
@@ -151,7 +155,33 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
   font-weight:600; font-size:14px; flex-shrink:0; transition:filter .15s;
 }
 .btn:hover{ filter:brightness(1.06) }
+.btn.ghost{ background:transparent; color:var(--ink); border:1px solid var(--line) }
+.btn.sm{ padding:7px 12px; font-size:12.5px; border-radius:var(--r-sm) }
 .empty{ color:var(--muted); font-size:14px; padding:18px 0; text-align:center }
+
+/* 루틴 인라인 편집기 */
+.r-editor{
+  width:100%; background:var(--card2); border:1px solid var(--line); border-radius:var(--r-md);
+  padding:12px; display:flex; flex-direction:column; gap:10px;
+}
+.r-editor input[type=text]{
+  padding:9px 12px; border-radius:var(--r-sm); border:1px solid var(--line); background:var(--card); width:100%;
+}
+.day-chips{ display:flex; gap:6px; flex-wrap:wrap }
+.day-chips button{
+  width:34px; height:30px; border-radius:var(--r-sm); border:1px solid var(--line);
+  font-size:12px; color:var(--muted); background:var(--card);
+}
+.day-chips button[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:600 }
+.r-actions{ display:flex; gap:6px; align-items:center }
+.r-actions .spacer{ flex:1 }
+
+/* 오늘 일정 */
+.today-ev{ display:flex; align-items:center; gap:10px; padding:9px 2px; border-bottom:1px solid var(--line); font-size:14px }
+.today-ev:last-child{ border-bottom:0 }
+.today-ev .sw{ width:9px; height:9px; border-radius:50%; flex-shrink:0 }
+.today-ev .t{ font-family:var(--mono); font-size:12px; color:var(--muted); flex-shrink:0; min-width:44px }
+.today-ev .n{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
 
 /* 주간 막대그래프 */
 .bars{ display:flex; align-items:flex-end; gap:8px; height:120px; margin-top:6px }
@@ -164,10 +194,9 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
 
 /* ---------- 캘린더 ---------- */
 .cal-layout{ display:grid; grid-template-columns:1fr; gap:16px }
-@media (min-width:900px){ .cal-layout.panel-open{ grid-template-columns:1fr 300px; align-items:start } }
+@media (min-width:900px){ .cal-layout.panel-open{ grid-template-columns:1fr 320px; align-items:start } }
 .cal-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px }
 .cal-head .title{ font-family:var(--serif); font-size:19px; font-weight:700 }
-.cal-head .title .num{ font-size:17px }
 .cal-nav{ display:flex; gap:6px }
 .cal-nav button{
   width:32px; height:32px; border-radius:var(--r-sm); border:1px solid var(--line);
@@ -201,16 +230,27 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
 .panel .card{ margin-bottom:0 }
 .panel h3{ font-family:var(--serif); font-size:16px; margin-bottom:2px }
 .panel .pdate{ font-family:var(--mono); font-size:12px; color:var(--muted); margin-bottom:12px }
+.p-sec{ font-size:11.5px; font-weight:600; color:var(--muted); letter-spacing:.04em; margin:14px 0 4px }
+.p-sec:first-of-type{ margin-top:0 }
 .pclose{ float:right; color:var(--muted); font-size:18px; line-height:1 }
+.p-routine{ display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--line) }
+.p-routine:last-child{ border-bottom:0 }
+.p-routine .cycle{ min-width:88px; padding:5px 10px 5px 7px; font-size:11.5px }
+.p-routine .cycle .dot{ width:14px; height:14px }
+.p-routine .cycle[data-s="2"] .dot::after{ left:3.5px; top:.5px; width:3.5px; height:7px }
+.p-routine .n{ flex:1; font-size:13.5px; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
 .ev-item{ display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--line); font-size:13.5px }
 .ev-item:last-of-type{ border-bottom:0 }
 .ev-item .sw{ width:9px; height:9px; border-radius:50%; flex-shrink:0 }
 .ev-item .t{ font-family:var(--mono); font-size:11.5px; color:var(--muted); flex-shrink:0 }
-.ev-item .n{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.ev-item .n{ flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; cursor:pointer }
+.ev-item.editing{ background:var(--accent-soft); border-radius:var(--r-sm); padding-left:6px; padding-right:6px }
 .ev-form{ display:flex; flex-direction:column; gap:8px; margin-top:12px; padding-top:12px; border-top:1px dashed var(--line) }
 .ev-form input[type=text], .ev-form input[type=time]{
   padding:9px 12px; border-radius:var(--r-sm); border:1px solid var(--line); background:var(--card2); width:100%;
 }
+.ev-form .row2{ display:flex; gap:8px }
+.ev-form .row2 .btn{ flex:1 }
 .swatches{ display:flex; gap:8px }
 .swatches button{ width:24px; height:24px; border-radius:50%; border:2px solid transparent }
 .swatches button[aria-pressed="true"]{ border-color:var(--ink) }
@@ -220,12 +260,12 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
     padding:0 12px calc(12px + env(safe-area-inset-bottom));
     animation:up .22s ease;
   }
-  .panel.open .card{ border-radius:20px 20px 16px 16px; max-height:62vh; overflow-y:auto }
+  .panel.open .card{ border-radius:20px 20px 16px 16px; max-height:70vh; overflow-y:auto }
   .scrim{ position:fixed; inset:0; background:rgba(0,0,0,.35); z-index:55 }
 }
 @keyframes up{ from{ transform:translateY(24px); opacity:0 } to{ transform:none; opacity:1 } }
 .scrim{ display:none }
-@media (max-width:899px){ .panel.open ~ .scrim, .scrim.show{ display:block } }
+@media (max-width:899px){ .scrim.show{ display:block } }
 
 /* ---------- 통계 ---------- */
 .heatmap{ display:flex; gap:4px; justify-content:flex-start; overflow-x:auto; padding:4px 0 }
@@ -240,7 +280,6 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
 .hm-wd{ width:20px; font-size:9.5px; color:var(--muted); height:20px; display:grid; place-items:center }
 .hm-legend{ display:flex; align-items:center; gap:4px; margin-top:10px; font-size:11px; color:var(--muted); justify-content:flex-end }
 .hm-legend i{ width:12px; height:12px; border-radius:3px; display:inline-block }
-.tabbar-space{ height:0 }
 </style>
 </head>
 <body>
@@ -272,17 +311,23 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
 
     <div class="card">
       <h2>오늘의 루틴</h2>
-      <div class="sub">눌러서 상태 변경 · 시작 전 → 진행 중 → 완료</div>
+      <div class="sub">눌러서 상태 변경 · 시작 전 → 진행 중 → 완료 · ✎로 요일·이름·순서 편집</div>
       <div id="routineList"></div>
       <div class="add-row">
-        <input id="routineInput" type="text" placeholder="새 루틴 이름" maxlength="40">
+        <input id="routineInput" type="text" placeholder="새 루틴 이름 (기본: 매일)" maxlength="40">
         <button class="btn" id="routineAdd">추가</button>
       </div>
     </div>
 
     <div class="card">
+      <h2>오늘 일정</h2>
+      <div class="sub" id="todaySub"></div>
+      <div id="todayEvents"></div>
+    </div>
+
+    <div class="card">
       <h2>이번 주</h2>
-      <div class="sub">요일별 루틴 완료율</div>
+      <div class="sub">요일별 루틴 완료율 · 루틴이 예정되지 않은 날은 제외</div>
       <div class="bars" id="weekBars"></div>
     </div>
   </section>
@@ -305,14 +350,20 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
       <div class="panel" id="panel">
         <div class="card">
           <button class="pclose" id="panelClose" aria-label="닫기">×</button>
-          <h3>일정</h3>
+          <h3 id="panelTitle">일정</h3>
           <div class="pdate num" id="panelDate"></div>
+          <div class="p-sec" id="pRoutineSec">루틴 체크</div>
+          <div id="panelRoutines"></div>
+          <div class="p-sec">일정</div>
           <div id="evList"></div>
           <div class="ev-form">
             <input type="text" id="evTitle" placeholder="일정 제목" maxlength="60">
             <input type="time" id="evTime">
             <div class="swatches" id="swatches"></div>
-            <button class="btn" id="evAdd">일정 추가</button>
+            <div class="row2">
+              <button class="btn" id="evAdd">일정 추가</button>
+              <button class="btn ghost" id="evCancel" hidden>취소</button>
+            </div>
           </div>
         </div>
       </div>
@@ -343,6 +394,15 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
         <i style="background:color-mix(in srgb,var(--accent) 50%,var(--card2))"></i>
         <i style="background:color-mix(in srgb,var(--accent) 75%,var(--card2))"></i>
         <i style="background:var(--accent)"></i> 많음
+      </div>
+    </div>
+    <div class="card">
+      <h2>데이터 백업</h2>
+      <div class="sub">기기 변경이나 브라우저 저장소 초기화에 대비해 주기적으로 내보내 두세요</div>
+      <div class="add-row" style="margin-top:0">
+        <button class="btn" id="expBtn">JSON 내보내기</button>
+        <button class="btn ghost" id="impBtn">가져오기</button>
+        <input type="file" id="impFile" accept=".json,application/json" hidden>
       </div>
     </div>
   </section>
@@ -392,12 +452,19 @@ const store = (() => {
 
 let state = {
   theme: null,          // 'light' | 'dark'
-  routines: [],         // {id, name, created:'YYYY-MM-DD'}
+  routines: [],         // {id, name, created:'YYYY-MM-DD', days:[0..6] (0=월)}
   log: {},              // { 'YYYY-MM-DD': { routineId: 0|1|2 } }
   events: {}            // { 'YYYY-MM-DD': [{id,title,time,color}] }
 };
 let saveTimer = null;
 function persist(){ clearTimeout(saveTimer); saveTimer = setTimeout(() => store.save(state), 250); }
+function migrate(){
+  for (const r of state.routines){
+    if (!Array.isArray(r.days) || !r.days.length) r.days = [0,1,2,3,4,5,6];
+  }
+  if (typeof state.log !== "object" || !state.log) state.log = {};
+  if (typeof state.events !== "object" || !state.events) state.events = {};
+}
 
 /* ================= 날짜 유틸 ================= */
 const pad = n => String(n).padStart(2, "0");
@@ -406,14 +473,18 @@ const parse = s => { const [y,m,dd] = s.split("-").map(Number); return new Date(
 const todayStr = () => fmt(new Date());
 const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x; };
 const mondayOf = d => addDays(d, -((d.getDay()+6)%7));
+const wdIdx = ds => (parse(ds).getDay()+6)%7;   // 월=0 … 일=6
 const WD = ["월","화","수","목","금","토","일"];
 const esc = s => s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2,7);
 
 /* ================= 달성률 계산 ================= */
-// 해당 날짜에 존재하던 루틴 목록
-function routinesOn(ds){ return state.routines.filter(r => r.created <= ds); }
-// 하루 완료율 (0~1), 루틴 없으면 null
+// 해당 날짜에 "예정된" 루틴 (생성일 이후 + 지정 요일)
+function routinesOn(ds){
+  const w = wdIdx(ds);
+  return state.routines.filter(r => r.created <= ds && r.days.includes(w));
+}
+// 하루 완료율 (0~1), 예정 루틴 없으면 null
 function dayRate(ds){
   const rs = routinesOn(ds);
   if (!rs.length) return null;
@@ -421,7 +492,7 @@ function dayRate(ds){
   const done = rs.filter(r => day[r.id] === 2).length;
   return done / rs.length;
 }
-// 기간 평균 (오늘까지 경과일 기준)
+// 기간 평균 (예정 루틴이 있는 날만)
 function avgRate(from, to){
   let sum = 0, cnt = 0;
   for (let d = new Date(from); d <= to; d = addDays(d, 1)){
@@ -430,24 +501,43 @@ function avgRate(from, to){
   }
   return cnt ? sum / cnt : null;
 }
-// 연속 완료일수: 완료율 100%인 날 기준, 오늘 미완료면 어제부터 계산
+function earliest(){
+  let e = null;
+  for (const r of state.routines) if (!e || r.created < e) e = r.created;
+  return e;
+}
+// 연속 완료: 100% 완료한 날 기준.
+// 예정 루틴이 없는 날(쉬는 날)은 건너뛰고, 오늘 미완료는 아직 끊지 않음.
 function currentStreak(){
-  let d = new Date(); let n = 0;
-  if (dayRate(fmt(d)) === 1) { n++; d = addDays(d, -1); }
-  else d = addDays(d, -1);
-  while (dayRate(fmt(d)) === 1){ n++; d = addDays(d, -1); }
+  const start = earliest();
+  if (!start) return 0;
+  let n = 0;
+  let d = new Date();
+  if (dayRate(fmt(d)) === 1) n++;
+  d = addDays(d, -1);
+  while (fmt(d) >= start){
+    const r = dayRate(fmt(d));
+    if (r === null){ d = addDays(d, -1); continue; }
+    if (r === 1){ n++; d = addDays(d, -1); continue; }
+    break;
+  }
   return n;
 }
 function bestStreak(){
-  const dates = Object.keys(state.log).sort();
-  if (!dates.length) return currentStreak();
+  const start = earliest();
+  if (!start) return 0;
+  const ds = todayStr();
   let best = 0, run = 0;
   const end = new Date();
-  for (let d = parse(dates[0]); d <= end; d = addDays(d, 1)){
-    if (dayRate(fmt(d)) === 1){ run++; best = Math.max(best, run); }
+  for (let d = parse(start); d <= end; d = addDays(d, 1)){
+    const s = fmt(d);
+    const r = dayRate(s);
+    if (r === null) continue;              // 쉬는 날은 스트릭 유지
+    if (r === 1){ run++; if (run > best) best = run; }
+    else if (s === ds){ /* 오늘 미완료는 리셋하지 않음 */ }
     else run = 0;
   }
-  return Math.max(best, currentStreak());
+  return best;
 }
 
 /* ================= 테마 ================= */
@@ -478,29 +568,62 @@ document.querySelectorAll("nav.tabs button").forEach(btn => {
 /* ================= 루틴 탭 ================= */
 const routineList = document.getElementById("routineList");
 const STATUS_LABEL = ["시작 전","진행 중","완료"];
+let editingRoutine = null;   // 편집 중인 루틴 id
+
+function daysNote(days){
+  if (days.length === 7) return "매일";
+  if (days.length === 5 && [0,1,2,3,4].every(d => days.includes(d))) return "평일";
+  if (days.length === 2 && days.includes(5) && days.includes(6)) return "주말";
+  return days.slice().sort((a,b)=>a-b).map(d => WD[d]).join("·");
+}
 
 function renderRoutines(){
   const ds = todayStr();
   const day = state.log[ds] || {};
+  const tw = wdIdx(ds);
   if (!state.routines.length){
     routineList.innerHTML = `<div class="empty">아직 루틴이 없어요. 아래에서 첫 루틴을 추가해 보세요.</div>`;
   } else {
     const mon = mondayOf(new Date());
-    routineList.innerHTML = state.routines.map(r => {
+    routineList.innerHTML = state.routines.map((r, idx) => {
+      if (editingRoutine === r.id){
+        const chips = WD.map((w, i) =>
+          `<button data-chip="${i}" aria-pressed="${r.days.includes(i)}">${w}</button>`).join("");
+        return `<div class="routine">
+          <div class="r-editor" data-id="${r.id}">
+            <input type="text" class="r-name" value="${esc(r.name)}" maxlength="40" aria-label="루틴 이름">
+            <div class="day-chips">${chips}</div>
+            <div class="r-actions">
+              <button class="btn ghost sm" data-move="-1" ${idx === 0 ? "disabled" : ""}>↑ 위로</button>
+              <button class="btn ghost sm" data-move="1" ${idx === state.routines.length-1 ? "disabled" : ""}>↓ 아래로</button>
+              <span class="spacer"></span>
+              <button class="btn ghost sm" data-rdel="${r.id}">삭제</button>
+              <button class="btn sm" data-rsave="${r.id}">완료</button>
+            </div>
+          </div>
+        </div>`;
+      }
+      const scheduled = r.days.includes(tw);
       const s = day[r.id] || 0;
       const dots = Array.from({length:7}, (_, i) => {
         const dds = fmt(addDays(mon, i));
         const st = (state.log[dds] || {})[r.id] || 0;
-        const cls = (st ? "d"+st : "") + (dds === ds ? " today" : "");
+        let cls = st ? "d"+st : "";
+        if (!r.days.includes(i)) cls += " off";
+        if (dds === ds) cls += " today";
         return `<i class="${cls}"></i>`;
       }).join("");
-      return `<div class="routine">
+      return `<div class="routine"${scheduled ? "" : ' style="opacity:.45"'}>
         <button class="cycle" data-s="${s}" data-id="${r.id}" aria-label="${esc(r.name)} 상태: ${STATUS_LABEL[s]}">
           <span class="dot"></span><span>${STATUS_LABEL[s]}</span>
         </button>
-        <span class="name">${esc(r.name)}</span>
+        <span class="name">
+          <span class="nm">${esc(r.name)}</span>
+          <span class="days-note">${daysNote(r.days)}${scheduled ? "" : " · 오늘은 쉬는 날"}</span>
+        </span>
         <span class="week-dots" title="이번 주">${dots}</span>
-        <button class="del" data-del="${r.id}" aria-label="${esc(r.name)} 삭제">×</button>
+        <button class="icon-btn" data-edit="${r.id}" aria-label="${esc(r.name)} 편집">✎</button>
+        <button class="icon-btn" data-del="${r.id}" aria-label="${esc(r.name)} 삭제">×</button>
       </div>`;
     }).join("");
   }
@@ -512,6 +635,20 @@ function renderRoutines(){
   document.getElementById("monthPct").innerHTML = mo === null ? "–" : Math.round(mo*100) + "<small>%</small>";
   document.getElementById("streak").innerHTML   = currentStreak() + "<small>일</small>";
   renderWeekBars();
+  renderTodayEvents();
+}
+
+function renderTodayEvents(){
+  const ds = todayStr();
+  const evs = (state.events[ds] || []).slice().sort((a,b) => (a.time||"99:99").localeCompare(b.time||"99:99"));
+  document.getElementById("todaySub").textContent = evs.length ? `${evs.length}개의 일정` : "";
+  document.getElementById("todayEvents").innerHTML = evs.length
+    ? evs.map(ev => `<div class="today-ev">
+        <span class="sw" style="background:${ev.color}"></span>
+        <span class="t">${ev.time || "종일"}</span>
+        <span class="n">${esc(ev.title)}</span>
+      </div>`).join("")
+    : `<div class="empty" style="padding:8px 0">오늘 일정이 없어요. 캘린더에서 추가할 수 있어요.</div>`;
 }
 
 function renderWeekBars(){
@@ -522,8 +659,9 @@ function renderWeekBars(){
     const s = fmt(d);
     const r = s <= ds ? dayRate(s) : null;
     const pct = r === null ? 0 : Math.round(r*100);
+    const label = s > ds ? "" : (r === null ? "–" : pct + "%");
     return `<div class="bar-col${s === ds ? " today" : ""}">
-      <span class="pct">${r === null ? "" : pct + "%"}</span>
+      <span class="pct">${label}</span>
       <div class="bar-track"><div class="bar-fill" style="height:${pct}%"></div></div>
       <span class="day">${WD[i]}</span>
     </div>`;
@@ -531,27 +669,79 @@ function renderWeekBars(){
 }
 
 routineList.addEventListener("click", e => {
+  const chip = e.target.closest("[data-chip]");
+  if (chip){
+    const ed = chip.closest(".r-editor");
+    const r = state.routines.find(x => x.id === ed.dataset.id);
+    const i = Number(chip.dataset.chip);
+    if (r.days.includes(i)){
+      if (r.days.length === 1) return;   // 최소 1개 요일 유지
+      r.days = r.days.filter(x => x !== i);
+    } else r.days.push(i);
+    persist();
+    chip.setAttribute("aria-pressed", r.days.includes(i));
+    return;
+  }
+  const mv = e.target.closest("[data-move]");
+  if (mv){
+    const ed = mv.closest(".r-editor");
+    const idx = state.routines.findIndex(x => x.id === ed.dataset.id);
+    const to = idx + Number(mv.dataset.move);
+    if (to < 0 || to >= state.routines.length) return;
+    const [r] = state.routines.splice(idx, 1);
+    state.routines.splice(to, 0, r);
+    persist(); renderRoutines();
+    return;
+  }
+  const rsave = e.target.closest("[data-rsave]");
+  if (rsave){
+    const ed = rsave.closest(".r-editor");
+    const r = state.routines.find(x => x.id === ed.dataset.id);
+    const name = ed.querySelector(".r-name").value.trim();
+    if (name) r.name = name;
+    editingRoutine = null;
+    persist(); renderAll();
+    return;
+  }
+  const rdel = e.target.closest("[data-rdel]");
+  if (rdel && confirm("이 루틴을 삭제할까요? 기록도 함께 지워집니다.")){
+    removeRoutine(rdel.dataset.rdel);
+    editingRoutine = null;
+    return;
+  }
+  const edit = e.target.closest("[data-edit]");
+  if (edit){
+    editingRoutine = editingRoutine === edit.dataset.edit ? null : edit.dataset.edit;
+    renderRoutines();
+    return;
+  }
   const cyc = e.target.closest(".cycle");
   if (cyc){
-    const ds = todayStr();
-    state.log[ds] = state.log[ds] || {};
-    const cur = state.log[ds][cyc.dataset.id] || 0;
-    state.log[ds][cyc.dataset.id] = (cur + 1) % 3;
-    persist(); renderAll(); return;
+    cycleStatus(todayStr(), cyc.dataset.id);
+    return;
   }
-  const del = e.target.closest(".del");
+  const del = e.target.closest("[data-del]");
   if (del && confirm("이 루틴을 삭제할까요? 기록도 함께 지워집니다.")){
-    const id = del.dataset.del;
-    state.routines = state.routines.filter(r => r.id !== id);
-    for (const k in state.log){ delete state.log[k][id]; }
-    persist(); renderAll();
+    removeRoutine(del.dataset.del);
   }
 });
+function cycleStatus(ds, id){
+  state.log[ds] = state.log[ds] || {};
+  const cur = state.log[ds][id] || 0;
+  state.log[ds][id] = (cur + 1) % 3;
+  persist(); renderAll();
+  if (selDate) renderPanel();
+}
+function removeRoutine(id){
+  state.routines = state.routines.filter(r => r.id !== id);
+  for (const k in state.log){ delete state.log[k][id]; }
+  persist(); renderAll();
+}
 function addRoutine(){
   const inp = document.getElementById("routineInput");
   const name = inp.value.trim();
   if (!name) return;
-  state.routines.push({ id: uid(), name, created: todayStr() });
+  state.routines.push({ id: uid(), name, created: todayStr(), days: [0,1,2,3,4,5,6] });
   inp.value = "";
   persist(); renderAll();
 }
@@ -562,6 +752,7 @@ document.getElementById("routineInput").addEventListener("keydown", e => { if (e
 let calY, calM;                    // 표시 중인 연/월
 let selDate = null;                // 선택된 날짜 'YYYY-MM-DD'
 let selColor = "#4C7A5C";
+let editingEv = null;              // 수정 중인 일정 id
 const EV_COLORS = ["#4C7A5C","#3E6B8F","#B85C4A","#B98A2E","#7A5CA0","#5A5F56"];
 
 function initCal(){ const n = new Date(); calY = n.getFullYear(); calM = n.getMonth(); }
@@ -595,6 +786,7 @@ document.getElementById("calGrid").addEventListener("click", e => {
   const cell = e.target.closest(".cell");
   if (!cell) return;
   selDate = cell.dataset.date;
+  cancelEvEdit();
   openPanel();
   renderCalendar();
 });
@@ -613,6 +805,7 @@ function closePanel(){
   scrim.classList.remove("show");
   document.getElementById("calLayout").classList.remove("panel-open");
   selDate = null;
+  cancelEvEdit();
   renderCalendar();
 }
 document.getElementById("panelClose").addEventListener("click", closePanel);
@@ -621,40 +814,96 @@ scrim.addEventListener("click", closePanel);
 function renderPanel(){
   if (!selDate) return;
   const d = parse(selDate);
+  const ds = todayStr();
   document.getElementById("panelDate").textContent = `${selDate} (${WD[(d.getDay()+6)%7]})`;
+
+  // 루틴 체크 (과거~오늘만)
+  const sec = document.getElementById("pRoutineSec");
+  const box = document.getElementById("panelRoutines");
+  if (selDate > ds){
+    sec.style.display = "none"; box.innerHTML = "";
+  } else {
+    sec.style.display = "";
+    const rs = routinesOn(selDate);
+    const day = state.log[selDate] || {};
+    box.innerHTML = rs.length
+      ? rs.map(r => {
+          const s = day[r.id] || 0;
+          return `<div class="p-routine">
+            <button class="cycle" data-s="${s}" data-pr="${r.id}">
+              <span class="dot"></span><span>${STATUS_LABEL[s]}</span>
+            </button>
+            <span class="n">${esc(r.name)}</span>
+          </div>`;
+        }).join("")
+      : `<div class="empty" style="padding:6px 0">이 날짜에 예정된 루틴이 없어요.</div>`;
+  }
+
+  // 일정 목록
   const evs = (state.events[selDate] || []).slice().sort((a,b) => (a.time||"99:99").localeCompare(b.time||"99:99"));
   document.getElementById("evList").innerHTML = evs.length
-    ? evs.map(ev => `<div class="ev-item">
+    ? evs.map(ev => `<div class="ev-item${ev.id === editingEv ? " editing" : ""}" data-open="${ev.id}">
         <span class="sw" style="background:${ev.color}"></span>
         ${ev.time ? `<span class="t">${ev.time}</span>` : ""}
-        <span class="n">${esc(ev.title)}</span>
-        <button class="del" data-ev="${ev.id}" aria-label="일정 삭제">×</button>
+        <span class="n" title="눌러서 수정">${esc(ev.title)}</span>
+        <button class="icon-btn" data-ev="${ev.id}" aria-label="일정 삭제">×</button>
       </div>`).join("")
     : `<div class="empty" style="padding:10px 0">등록된 일정이 없어요.</div>`;
   document.getElementById("swatches").innerHTML = EV_COLORS.map(c =>
     `<button style="background:${c}" data-c="${c}" aria-pressed="${c === selColor}" aria-label="색상 ${c}"></button>`
   ).join("");
+  document.getElementById("evAdd").textContent = editingEv ? "수정 저장" : "일정 추가";
+  document.getElementById("evCancel").hidden = !editingEv;
 }
+document.getElementById("panelRoutines").addEventListener("click", e => {
+  const b = e.target.closest("[data-pr]");
+  if (b) cycleStatus(selDate, b.dataset.pr);
+});
 document.getElementById("swatches").addEventListener("click", e => {
   const b = e.target.closest("[data-c]");
   if (b){ selColor = b.dataset.c; renderPanel(); }
 });
 document.getElementById("evList").addEventListener("click", e => {
-  const b = e.target.closest("[data-ev]");
-  if (!b) return;
-  state.events[selDate] = (state.events[selDate] || []).filter(ev => ev.id !== b.dataset.ev);
-  if (!state.events[selDate].length) delete state.events[selDate];
-  persist(); renderPanel(); renderCalendar();
+  const del = e.target.closest("[data-ev]");
+  if (del){
+    state.events[selDate] = (state.events[selDate] || []).filter(ev => ev.id !== del.dataset.ev);
+    if (!state.events[selDate].length) delete state.events[selDate];
+    if (editingEv === del.dataset.ev) cancelEvEdit();
+    persist(); renderPanel(); renderCalendar(); renderTodayEvents();
+    return;
+  }
+  const item = e.target.closest("[data-open]");
+  if (item){
+    const ev = (state.events[selDate] || []).find(x => x.id === item.dataset.open);
+    if (!ev) return;
+    editingEv = ev.id;
+    document.getElementById("evTitle").value = ev.title;
+    document.getElementById("evTime").value = ev.time || "";
+    selColor = ev.color;
+    renderPanel();
+  }
 });
+function cancelEvEdit(){
+  editingEv = null;
+  const t = document.getElementById("evTitle");
+  if (t){ t.value = ""; document.getElementById("evTime").value = ""; }
+}
+document.getElementById("evCancel").addEventListener("click", () => { cancelEvEdit(); renderPanel(); });
 document.getElementById("evAdd").addEventListener("click", () => {
   const t = document.getElementById("evTitle");
   const title = t.value.trim();
   if (!title || !selDate) return;
   const time = document.getElementById("evTime").value;
-  state.events[selDate] = state.events[selDate] || [];
-  state.events[selDate].push({ id: uid(), title, time, color: selColor });
-  t.value = ""; document.getElementById("evTime").value = "";
-  persist(); renderPanel(); renderCalendar();
+  if (editingEv){
+    const ev = (state.events[selDate] || []).find(x => x.id === editingEv);
+    if (ev){ ev.title = title; ev.time = time; ev.color = selColor; }
+    cancelEvEdit();
+  } else {
+    state.events[selDate] = state.events[selDate] || [];
+    state.events[selDate].push({ id: uid(), title, time, color: selColor });
+    t.value = ""; document.getElementById("evTime").value = "";
+  }
+  persist(); renderPanel(); renderCalendar(); renderTodayEvents();
 });
 
 /* ================= 통계 탭 ================= */
@@ -663,7 +912,6 @@ function initHm(){ const n = new Date(); hmY = n.getFullYear(); hmM = n.getMonth
 function renderStats(){
   document.getElementById("stStreak").innerHTML = currentStreak() + "<small>일</small>";
   document.getElementById("stBest").innerHTML   = bestStreak() + "<small>일</small>";
-  // 이번 달 완료 횟수(체크 수)
   const n = new Date();
   const pfx = `${n.getFullYear()}-${pad(n.getMonth()+1)}-`;
   let done = 0;
@@ -690,7 +938,7 @@ function renderHeatmap(){
       if (s > ds){ html += `<div class="hm-cell future" title="${s}"></div>`; continue; }
       const r = dayRate(s);
       const lvl = r === null || r === 0 ? 0 : r <= .25 ? 1 : r <= .5 ? 2 : r < 1 ? 3 : 4;
-      html += `<div class="hm-cell" data-l="${lvl}" title="${s} · ${r === null ? "기록 없음" : Math.round(r*100) + "%"}"></div>`;
+      html += `<div class="hm-cell" data-l="${lvl}" title="${s} · ${r === null ? "예정 루틴 없음" : Math.round(r*100) + "%"}"></div>`;
     }
     html += `</div>`;
   }
@@ -698,6 +946,40 @@ function renderHeatmap(){
 }
 document.getElementById("hmPrev").addEventListener("click", () => { hmM--; if (hmM < 0){ hmM = 11; hmY--; } renderHeatmap(); });
 document.getElementById("hmNext").addEventListener("click", () => { hmM++; if (hmM > 11){ hmM = 0; hmY++; } renderHeatmap(); });
+
+/* ================= 백업 (내보내기 / 가져오기) ================= */
+document.getElementById("expBtn").addEventListener("click", () => {
+  const data = JSON.stringify({ app: "haru-planner", version: 1, exportedAt: new Date().toISOString(),
+    routines: state.routines, log: state.log, events: state.events, theme: state.theme }, null, 2);
+  const blob = new Blob([data], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `haru-backup-${todayStr()}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+});
+document.getElementById("impBtn").addEventListener("click", () => document.getElementById("impFile").click());
+document.getElementById("impFile").addEventListener("change", async e => {
+  const file = e.target.files[0];
+  e.target.value = "";
+  if (!file) return;
+  try {
+    const obj = JSON.parse(await file.text());
+    if (!obj || !Array.isArray(obj.routines) || typeof obj.log !== "object" || typeof obj.events !== "object"){
+      alert("올바른 백업 파일이 아니에요."); return;
+    }
+    if (!confirm("현재 데이터를 백업 파일 내용으로 교체할까요? 이 작업은 되돌릴 수 없어요.")) return;
+    state.routines = obj.routines;
+    state.log = obj.log || {};
+    state.events = obj.events || {};
+    if (obj.theme) state.theme = obj.theme;
+    migrate();
+    persist(); applyTheme(); renderAll();
+    alert("가져오기 완료!");
+  } catch(err){
+    alert("파일을 읽지 못했어요. JSON 형식을 확인해 주세요.");
+  }
+});
 
 /* ================= 초기화 ================= */
 function renderAll(){ renderRoutines(); renderCalendar(); renderStats(); }
@@ -708,6 +990,7 @@ function renderHeader(){
 (async () => {
   const saved = await store.load();
   if (saved) state = Object.assign(state, saved);
+  migrate();
   applyTheme();
   initCal(); initHm();
   renderHeader();
