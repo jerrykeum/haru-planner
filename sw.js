@@ -1,4 +1,4 @@
-const CACHE = "haru-planner-v2";
+const CACHE = "haru-planner-v3";
 const ASSETS = [
   "./",
   "./index.html",

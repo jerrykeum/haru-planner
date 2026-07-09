@@ -280,13 +280,81 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
 .hm-wd{ width:20px; font-size:9.5px; color:var(--muted); height:20px; display:grid; place-items:center }
 .hm-legend{ display:flex; align-items:center; gap:4px; margin-top:10px; font-size:11px; color:var(--muted); justify-content:flex-end }
 .hm-legend i{ width:12px; height:12px; border-radius:3px; display:inline-block }
+
+/* ---------- 리캡 모달 ---------- */
+.recap-overlay{
+  position:fixed; inset:0; background:rgba(0,0,0,.42); z-index:80;
+  display:none; align-items:flex-end; justify-content:center; padding:16px;
+}
+.recap-overlay.show{ display:flex }
+@media (min-width:768px){ .recap-overlay{ align-items:center } }
+.recap{
+  background:var(--card); border:1px solid var(--line); border-radius:20px;
+  box-shadow:var(--shadow); padding:22px; max-width:420px; width:100%;
+  margin-bottom:env(safe-area-inset-bottom); animation:up .22s ease;
+}
+.recap h3{ font-family:var(--serif); font-size:19px; margin-bottom:4px }
+.recap .sub2{ font-size:13px; color:var(--muted); margin-bottom:12px }
+.recap .prog{ font-family:var(--mono); font-size:14px; margin-bottom:8px; color:var(--accent); font-weight:600 }
+.recap .p-routine .n{ font-size:14px }
+.recap .foot{ display:flex; gap:8px; margin-top:16px }
+.recap .foot .btn{ flex:1 }
+
+/* ---------- 함께 탭 ---------- */
+.sub-tabs{ display:flex; gap:6px; margin-bottom:14px }
+.sub-tabs button{
+  padding:7px 14px; border-radius:999px; border:1px solid var(--line);
+  font-size:13px; color:var(--muted); background:var(--card);
+}
+.sub-tabs button[aria-selected="true"]{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:600 }
+.member-chips{ display:flex; gap:6px; flex-wrap:wrap; margin-top:10px }
+.member-chips span{ font-size:12px; padding:4px 10px; border-radius:999px; background:var(--card2); border:1px solid var(--line) }
+.member-chips span i{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px }
+.code-badge{
+  font-family:var(--mono); font-size:13px; letter-spacing:.15em; padding:4px 10px;
+  border-radius:var(--r-sm); background:var(--accent-soft); color:var(--accent);
+  border:1px dashed var(--accent); cursor:pointer;
+}
+.composer{ display:flex; flex-direction:column; gap:8px }
+.composer textarea{
+  width:100%; min-height:64px; resize:vertical; padding:10px 12px;
+  border-radius:var(--r-md); border:1px solid var(--line); background:var(--card2); font:inherit; color:inherit;
+}
+.composer input[type=text]{ padding:10px 14px; border-radius:var(--r-md); border:1px solid var(--line); background:var(--card2) }
+.composer .c-row{ display:flex; gap:8px; align-items:center }
+.composer .c-row .spacer{ flex:1 }
+.photo-prev{ max-width:140px; border-radius:var(--r-sm); display:block; border:1px solid var(--line) }
+.post{ padding:14px 2px; border-bottom:1px solid var(--line) }
+.post:last-child{ border-bottom:0 }
+.post .meta{ display:flex; align-items:baseline; gap:8px; margin-bottom:5px }
+.post .meta .who{ font-weight:600; font-size:13.5px }
+.post .meta .who i{ display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:5px }
+.post .meta .when{ font-family:var(--mono); font-size:11px; color:var(--muted) }
+.post .txt{ font-size:14px; white-space:pre-wrap; word-break:break-word }
+.post img{ max-width:100%; border-radius:var(--r-md); margin-top:8px; border:1px solid var(--line) }
+.chat-box{ display:flex; flex-direction:column; gap:6px; max-height:420px; overflow-y:auto; padding:4px 0 10px }
+.msg{
+  max-width:78%; padding:8px 12px; border-radius:14px; font-size:14px;
+  word-break:break-word; align-self:flex-start; background:var(--card2); border:1px solid var(--line);
+}
+.msg.mine{ align-self:flex-end; background:var(--accent); color:var(--accent-ink); border-color:var(--accent) }
+.msg .m-meta{ font-size:10px; opacity:.7; margin-bottom:2px; font-family:var(--mono) }
+.chat-input{ display:flex; gap:8px }
+.chat-input input{ flex:1; padding:10px 14px; border-radius:999px; border:1px solid var(--line); background:var(--card2); min-width:0 }
+.hint-banner{
+  font-size:12.5px; color:var(--accent); background:var(--accent-soft);
+  border:1px solid var(--accent); border-radius:var(--r-md); padding:8px 12px; margin-bottom:12px;
+}
+.setup-steps{ font-size:13.5px; line-height:1.9; color:var(--muted) }
+.setup-steps b{ color:var(--ink) }
+.tg-ev-color{ width:9px; height:9px; border-radius:50%; flex-shrink:0 }
 </style>
 </head>
 <body>
 <div class="app">
   <header>
     <div class="brand">
-      <h1>HARU</h1>
+      <h1>하루</h1>
       <div class="date num" id="headDate"></div>
     </div>
     <button class="theme-btn" id="themeBtn" aria-label="테마 전환">
@@ -299,6 +367,7 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
     <button role="tab" aria-selected="true" data-tab="routine">루틴</button>
     <button role="tab" aria-selected="false" data-tab="calendar">캘린더</button>
     <button role="tab" aria-selected="false" data-tab="stats">통계</button>
+    <button role="tab" aria-selected="false" data-tab="together">함께</button>
   </nav>
 
   <!-- 루틴 탭 -->
@@ -406,6 +475,127 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
       </div>
     </div>
   </section>
+
+  <!-- 함께 탭 -->
+  <section id="tab-together" hidden>
+    <div class="card" id="tgSetup" hidden>
+      <h2>함께 쓰기 설정이 필요해요</h2>
+      <div class="sub">피드·채팅·공유 캘린더는 무료 Firebase 연결이 필요합니다</div>
+      <div class="setup-steps">
+        <b>1.</b> console.firebase.google.com 에서 프로젝트 생성<br>
+        <b>2.</b> 웹 앱(&lt;/&gt;) 추가 → SDK 설정값 복사<br>
+        <b>3.</b> index.html 하단 <b>FIREBASE_CONFIG</b>에 붙여넣기<br>
+        <b>4.</b> Authentication → 로그인 방법 → <b>익명</b> 사용 설정<br>
+        <b>5.</b> Firestore Database 생성 → 규칙 붙여넣기<br><br>
+        단계별 자세한 설명은 함께 드린 <b>SETUP-FIREBASE.md</b>를 참고하세요.
+      </div>
+    </div>
+
+    <div class="card" id="tgJoin" hidden>
+      <h2>그룹 만들기 / 참여</h2>
+      <div class="sub">한 그룹에 최대 5명까지 함께할 수 있어요</div>
+      <div class="composer">
+        <input type="text" id="tgNick" placeholder="내 닉네임" maxlength="12">
+        <div class="c-row">
+          <input type="text" id="tgName" placeholder="새 그룹 이름" maxlength="20" style="flex:1;min-width:0">
+          <button class="btn" id="tgCreate">만들기</button>
+        </div>
+        <div class="c-row">
+          <input type="text" id="tgCode" placeholder="초대 코드 6자리" maxlength="6" style="flex:1;min-width:0;font-family:var(--mono);letter-spacing:.1em">
+          <button class="btn ghost" id="tgJoinBtn">참여</button>
+        </div>
+        <div class="sub" id="tgJoinMsg" style="margin:0"></div>
+      </div>
+    </div>
+
+    <div id="tgMain" hidden>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <h2 id="tgTitle" style="margin:0"></h2>
+          <button class="code-badge" id="tgCodeBadge" title="눌러서 초대 코드 복사"></button>
+          <span style="flex:1"></span>
+          <button class="btn ghost sm" id="tgLeave">나가기</button>
+        </div>
+        <div class="member-chips" id="tgMembers"></div>
+      </div>
+
+      <div class="sub-tabs" id="tgTabs">
+        <button data-tg="feed" aria-selected="true">피드</button>
+        <button data-tg="chat" aria-selected="false">채팅</button>
+        <button data-tg="cal" aria-selected="false">공유 캘린더</button>
+      </div>
+
+      <div id="tg-feed">
+        <div class="card">
+          <div class="hint-banner" id="tgHint" hidden></div>
+          <div class="composer">
+            <textarea id="postText" placeholder="지금 이 순간을 기록해 보세요 (텍스트·사진)" maxlength="500"></textarea>
+            <img class="photo-prev" id="photoPrev" hidden alt="첨부 사진 미리보기">
+            <div class="c-row">
+              <button class="btn ghost sm" id="photoBtn">📷 사진</button>
+              <button class="btn ghost sm" id="photoClear" hidden>사진 제거</button>
+              <span class="spacer"></span>
+              <button class="btn" id="postBtn">올리기</button>
+            </div>
+            <input type="file" id="photoFile" accept="image/*" hidden>
+          </div>
+        </div>
+        <div class="card">
+          <h2>기록</h2>
+          <div class="sub">최근 50개 · 실시간 갱신</div>
+          <div id="postList"></div>
+        </div>
+      </div>
+
+      <div id="tg-chat" hidden>
+        <div class="card">
+          <h2>채팅</h2>
+          <div class="sub">그룹 멤버끼리의 대화</div>
+          <div class="chat-box" id="chatBox"></div>
+          <div class="chat-input">
+            <input type="text" id="chatText" placeholder="메시지 보내기" maxlength="300">
+            <button class="btn" id="chatSend">전송</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="tg-cal" hidden>
+        <div class="card">
+          <div class="cal-head">
+            <div class="title"><span class="num" id="tgCalTitle"></span></div>
+            <div class="cal-nav">
+              <button id="tgCalPrev" aria-label="이전 달">‹</button>
+              <button id="tgCalNext" aria-label="다음 달">›</button>
+            </div>
+          </div>
+          <div class="cal-grid" id="tgCalGrid"></div>
+          <div id="tgDayBox" hidden style="margin-top:14px;padding-top:12px;border-top:1px dashed var(--line)">
+            <div class="pdate num" id="tgDayTitle" style="margin-bottom:8px"></div>
+            <div id="tgDayList"></div>
+            <div class="ev-form" style="border:0;padding-top:8px;margin-top:0">
+              <input type="text" id="tgEvTitle" placeholder="일정 제목" maxlength="60">
+              <input type="time" id="tgEvTime">
+              <button class="btn" id="tgEvAdd">공유 일정 추가</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- 루틴 리캡 모달 -->
+<div class="recap-overlay" id="recapOverlay">
+  <div class="recap">
+    <h3>오늘 루틴은 잘 실천하셨나요?</h3>
+    <div class="sub2" id="recapSub"></div>
+    <div class="prog" id="recapProg"></div>
+    <div id="recapList"></div>
+    <div class="foot">
+      <button class="btn ghost" id="recapNotif" hidden>시스템 알림 허용</button>
+      <button class="btn" id="recapClose">확인</button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -558,9 +748,10 @@ themeBtn.addEventListener("click", () => {
 document.querySelectorAll("nav.tabs button").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b === btn));
-    ["routine","calendar","stats"].forEach(t => {
+    ["routine","calendar","stats","together"].forEach(t => {
       document.getElementById("tab-" + t).hidden = (t !== btn.dataset.tab);
     });
+    if (btn.dataset.tab === "together" && typeof window.togetherShow === "function") window.togetherShow();
     renderAll();
   });
 });
@@ -981,6 +1172,65 @@ document.getElementById("impFile").addEventListener("change", async e => {
   }
 });
 
+/* ================= 루틴 리캡 알림 (10시 / 13시 / 20시) ================= */
+const RECAP_SLOTS = [10, 13, 20];
+const RECAP_NAMES = { 10: "오전 10시", 13: "오후 1시", 20: "저녁 8시" };
+const recapOverlay = document.getElementById("recapOverlay");
+
+function checkRecap(){
+  const ds = todayStr();
+  if (!state.recap || state.recap.date !== ds) state.recap = { date: ds, shown: [] };
+  const h = new Date().getHours();
+  let slot = null;
+  for (const s of RECAP_SLOTS) if (h >= s && !state.recap.shown.includes(s)) slot = s;
+  if (slot === null) return;
+  // 지나간 슬롯은 모두 소진 처리 (하루에 한 번씩만)
+  for (const s of RECAP_SLOTS) if (h >= s && !state.recap.shown.includes(s)) state.recap.shown.push(s);
+  persist();
+  if (!routinesOn(ds).length) return;
+  openRecap(slot);
+  if ("Notification" in window && Notification.permission === "granted"){
+    try { new Notification("하루 — 루틴 리캡", { body: "오늘 루틴은 잘 실천하셨나요?", icon: "./icon-192.png" }); } catch(e){}
+  }
+}
+function openRecap(slot){
+  document.getElementById("recapSub").textContent = `${RECAP_NAMES[slot]} 리캡 · 잊은 루틴이 없는지 확인해 보세요`;
+  renderRecapList();
+  const nb = document.getElementById("recapNotif");
+  nb.hidden = !("Notification" in window) || Notification.permission !== "default";
+  recapOverlay.classList.add("show");
+}
+function renderRecapList(){
+  const ds = todayStr();
+  const rs = routinesOn(ds);
+  const day = state.log[ds] || {};
+  const done = rs.filter(r => day[r.id] === 2).length;
+  document.getElementById("recapProg").textContent = `${done} / ${rs.length} 완료`;
+  document.getElementById("recapList").innerHTML = (done === rs.length && rs.length)
+    ? `<div class="empty" style="padding:8px 0">오늘 예정된 루틴을 전부 완료했어요. 수고했어요 🌿</div>`
+    : rs.map(r => {
+        const s = day[r.id] || 0;
+        return `<div class="p-routine">
+          <button class="cycle" data-s="${s}" data-rc="${r.id}">
+            <span class="dot"></span><span>${STATUS_LABEL[s]}</span>
+          </button>
+          <span class="n">${esc(r.name)}</span>
+        </div>`;
+      }).join("");
+}
+document.getElementById("recapList").addEventListener("click", e => {
+  const b = e.target.closest("[data-rc]");
+  if (b){ cycleStatus(todayStr(), b.dataset.rc); renderRecapList(); }
+});
+document.getElementById("recapClose").addEventListener("click", () => recapOverlay.classList.remove("show"));
+recapOverlay.addEventListener("click", e => { if (e.target === recapOverlay) recapOverlay.classList.remove("show"); });
+document.getElementById("recapNotif").addEventListener("click", async () => {
+  try {
+    const p = await Notification.requestPermission();
+    document.getElementById("recapNotif").hidden = p !== "default";
+  } catch(e){}
+});
+
 /* ================= 초기화 ================= */
 function renderAll(){ renderRoutines(); renderCalendar(); renderStats(); }
 function renderHeader(){
@@ -995,6 +1245,8 @@ function renderHeader(){
   initCal(); initHm();
   renderHeader();
   renderAll();
+  checkRecap();
+  setInterval(checkRecap, 60000);
 })();
 
 /* 서비스워커 등록 (http/https 배포 환경에서만) */
@@ -1003,6 +1255,357 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
   });
 }
+</script>
+
+<!-- ================= 함께 탭 (Firebase) ================= -->
+<script type="module">
+/* ★★★ 여기에 Firebase 콘솔의 SDK 설정값을 붙여넣으세요 ★★★
+   (콘솔 → 프로젝트 설정 → 내 앱 → SDK 설정 및 구성 → 구성)
+   비워두면 "함께" 탭에 설정 안내가 표시됩니다. */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCbfGRAXZ0UMtso1BO5Xi-euiPCn1bTXyk",
+  authDomain: "haru-planner-61c61.firebaseapp.com",
+  projectId: "haru-planner-61c61",
+  appId: "1:45918584805:web:b5048f980d1077554fb90c"
+};
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import {
+  getFirestore, collection, doc, addDoc, getDoc, getDocs, updateDoc, deleteDoc,
+  onSnapshot, query, where, orderBy, limit, deleteField
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+
+const $ = id => document.getElementById(id);
+let fbApp = null, db = null, auth = null;
+let uid = null, gid = null, gdata = null;
+let unsubs = [];
+let tgCalY, tgCalM, tgSel = null, evCache = [], postCache = [];
+let photoData = null;
+
+function showView(v){
+  $("tgSetup").hidden = v !== "setup";
+  $("tgJoin").hidden  = v !== "join";
+  $("tgMain").hidden  = v !== "main";
+}
+function joinMsg(t){ $("tgJoinMsg").textContent = t; }
+function fmtTime(ts){
+  const d = new Date(ts);
+  const t = `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  return fmt(d) === todayStr() ? t : `${d.getMonth()+1}/${d.getDate()} ${t}`;
+}
+function membersSorted(){
+  if (!gdata || !gdata.members) return [];
+  return Object.entries(gdata.members)
+    .map(([u, m]) => ({ uid: u, ...m }))
+    .sort((a,b) => (a.order||0) - (b.order||0));
+}
+function memberColor(u){
+  const ms = membersSorted();
+  const i = ms.findIndex(m => m.uid === u);
+  return EV_COLORS[(i < 0 ? 0 : ms[i].order || i) % EV_COLORS.length];
+}
+
+/* ---------- 진입 ---------- */
+window.togetherShow = async function(){
+  if (!FIREBASE_CONFIG.apiKey){ showView("setup"); return; }
+  try {
+    if (!fbApp){
+      fbApp = initializeApp(FIREBASE_CONFIG);
+      auth = getAuth(fbApp);
+      db = getFirestore(fbApp);
+    }
+    if (!uid){
+      const cred = await signInAnonymously(auth);
+      uid = cred.user.uid;
+    }
+  } catch(e){
+    alert("Firebase 연결 실패: " + e.message + "\n(익명 로그인 사용 설정과 설정값을 확인해 주세요)");
+    showView("setup"); return;
+  }
+  if (gid){ showView("main"); return; }
+  if (state.together && state.together.groupId){
+    try {
+      const snap = await getDoc(doc(db, "groups", state.together.groupId));
+      if (snap.exists() && snap.data().members && snap.data().members[uid]){
+        gid = snap.id; gdata = snap.data();
+        enterGroup(); return;
+      }
+    } catch(e){}
+    state.together = null; persist();
+  }
+  showView("join");
+};
+
+/* ---------- 그룹 생성/참여/나가기 ---------- */
+$("tgCreate").addEventListener("click", async () => {
+  const nick = $("tgNick").value.trim();
+  const name = $("tgName").value.trim();
+  if (!nick || !name){ joinMsg("닉네임과 그룹 이름을 입력해 주세요."); return; }
+  $("tgCreate").disabled = true;
+  try {
+    const code = Array.from({length:6}, () => "ABCDEFGHJKMNPQRSTUVWXYZ23456789"[Math.floor(Math.random()*31)]).join("");
+    const ref = await addDoc(collection(db, "groups"), {
+      name, code, createdAt: Date.now(),
+      members: { [uid]: { nick, order: 0, joinedAt: Date.now() } }
+    });
+    gdata = (await getDoc(ref)).data(); gid = ref.id;
+    state.together = { groupId: gid, nick }; persist();
+    enterGroup();
+  } catch(e){ joinMsg("생성 실패: " + e.message); }
+  $("tgCreate").disabled = false;
+});
+
+$("tgJoinBtn").addEventListener("click", async () => {
+  const nick = $("tgNick").value.trim();
+  const code = $("tgCode").value.trim().toUpperCase();
+  if (!nick || code.length !== 6){ joinMsg("닉네임과 6자리 초대 코드를 입력해 주세요."); return; }
+  $("tgJoinBtn").disabled = true;
+  try {
+    const qs = await getDocs(query(collection(db, "groups"), where("code", "==", code)));
+    if (qs.empty){ joinMsg("해당 코드의 그룹을 찾을 수 없어요."); $("tgJoinBtn").disabled = false; return; }
+    const d = qs.docs[0];
+    const members = d.data().members || {};
+    if (!members[uid] && Object.keys(members).length >= 5){
+      joinMsg("정원(5명)이 가득 찼어요."); $("tgJoinBtn").disabled = false; return;
+    }
+    if (!members[uid]){
+      await updateDoc(d.ref, { ["members." + uid]: { nick, order: Object.keys(members).length, joinedAt: Date.now() } });
+    }
+    gdata = (await getDoc(d.ref)).data(); gid = d.id;
+    state.together = { groupId: gid, nick }; persist();
+    enterGroup();
+  } catch(e){ joinMsg("참여 실패: " + e.message); }
+  $("tgJoinBtn").disabled = false;
+});
+
+$("tgLeave").addEventListener("click", async () => {
+  if (!confirm("그룹에서 나갈까요? 다시 들어오려면 초대 코드가 필요해요.")) return;
+  try { await updateDoc(doc(db, "groups", gid), { ["members." + uid]: deleteField() }); } catch(e){}
+  unsubs.forEach(u => u()); unsubs = [];
+  gid = null; gdata = null; tgSel = null; evCache = []; postCache = [];
+  state.together = null; persist();
+  showView("join");
+});
+
+/* ---------- 그룹 입장: 헤더 + 실시간 리스너 ---------- */
+function enterGroup(){
+  showView("main");
+  renderHead();
+  unsubs.forEach(u => u()); unsubs = [];
+  unsubs.push(onSnapshot(doc(db, "groups", gid), s => {
+    if (s.exists()){ gdata = s.data(); renderHead(); }
+  }));
+  unsubs.push(onSnapshot(
+    query(collection(db, "groups", gid, "posts"), orderBy("at", "desc"), limit(50)),
+    s => { postCache = s.docs.map(d => ({ id: d.id, ...d.data() })); renderPosts(); }
+  ));
+  unsubs.push(onSnapshot(
+    query(collection(db, "groups", gid, "chat"), orderBy("at", "desc"), limit(100)),
+    s => renderChat(s.docs.map(d => ({ id: d.id, ...d.data() })).reverse())
+  ));
+  unsubs.push(onSnapshot(
+    query(collection(db, "groups", gid, "events"), orderBy("date"), limit(500)),
+    s => { evCache = s.docs.map(d => ({ id: d.id, ...d.data() })); renderTgCal(); if (tgSel) renderTgDay(); }
+  ));
+  const n = new Date(); tgCalY = n.getFullYear(); tgCalM = n.getMonth();
+  renderTgCal();
+}
+function renderHead(){
+  if (!gdata) return;
+  $("tgTitle").textContent = gdata.name;
+  $("tgCodeBadge").textContent = gdata.code;
+  $("tgMembers").innerHTML = membersSorted().map(m =>
+    `<span><i style="background:${memberColor(m.uid)}"></i>${esc(m.nick)}${m.uid === uid ? " (나)" : ""}</span>`
+  ).join("") + `<span style="color:var(--muted)">${membersSorted().length}/5명</span>`;
+}
+$("tgCodeBadge").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(gdata.code);
+    const b = $("tgCodeBadge"); const orig = gdata.code;
+    b.textContent = "복사됨!";
+    setTimeout(() => b.textContent = orig, 1200);
+  } catch(e){ alert("초대 코드: " + gdata.code); }
+});
+
+/* ---------- 서브탭 ---------- */
+$("tgTabs").addEventListener("click", e => {
+  const b = e.target.closest("[data-tg]");
+  if (!b) return;
+  document.querySelectorAll("#tgTabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+  ["feed","chat","cal"].forEach(t => $("tg-" + t).hidden = (t !== b.dataset.tg));
+  if (b.dataset.tg === "chat"){ const box = $("chatBox"); box.scrollTop = box.scrollHeight; }
+});
+
+/* ---------- 피드 ---------- */
+function renderPosts(){
+  // 1시간 리듬 힌트
+  const mine = postCache.filter(p => p.uid === uid);
+  const hint = $("tgHint");
+  if (!mine.length){
+    hint.hidden = false; hint.textContent = "첫 기록을 남겨보세요! 1시간에 한 번씩 순간을 기록하는 챌린지예요 📸";
+  } else {
+    const diff = Date.now() - mine[0].at;
+    if (diff >= 3600e3){
+      hint.hidden = false;
+      hint.textContent = `마지막 기록으로부터 ${Math.floor(diff/3600e3)}시간이 지났어요. 지금을 기록할 시간! ⏰`;
+    } else hint.hidden = true;
+  }
+  $("postList").innerHTML = postCache.length
+    ? postCache.map(p => `<div class="post">
+        <div class="meta">
+          <span class="who"><i style="background:${memberColor(p.uid)}"></i>${esc(p.nick || "?")}</span>
+          <span class="when">${fmtTime(p.at)}</span>
+          ${p.uid === uid ? `<button class="icon-btn" data-pdel="${p.id}" style="width:22px;height:22px;font-size:13px;margin-left:auto" aria-label="삭제">×</button>` : ""}
+        </div>
+        ${p.text ? `<div class="txt">${esc(p.text)}</div>` : ""}
+        ${p.photo ? `<img src="${p.photo}" alt="첨부 사진" loading="lazy">` : ""}
+      </div>`).join("")
+    : `<div class="empty">아직 기록이 없어요. 첫 순간을 남겨보세요!</div>`;
+}
+$("postList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-pdel]");
+  if (b && confirm("이 기록을 삭제할까요?")){
+    try { await deleteDoc(doc(db, "groups", gid, "posts", b.dataset.pdel)); } catch(err){ alert("삭제 실패: " + err.message); }
+  }
+});
+function compressImage(file){
+  return new Promise((res, rej) => {
+    const img = new Image();
+    img.onload = () => {
+      const max = 800;
+      let w = img.naturalWidth, h = img.naturalHeight;
+      if (Math.max(w, h) > max){ const k = max / Math.max(w, h); w = Math.round(w*k); h = Math.round(h*k); }
+      const c = document.createElement("canvas"); c.width = w; c.height = h;
+      c.getContext("2d").drawImage(img, 0, 0, w, h);
+      let q = 0.75, data = c.toDataURL("image/jpeg", q);
+      while (data.length > 400000 && q > 0.3){ q -= 0.15; data = c.toDataURL("image/jpeg", q); }
+      URL.revokeObjectURL(img.src);
+      if (data.length > 700000) rej(new Error("사진이 너무 커요")); else res(data);
+    };
+    img.onerror = () => rej(new Error("이미지를 읽지 못했어요"));
+    img.src = URL.createObjectURL(file);
+  });
+}
+function clearPhoto(){
+  photoData = null;
+  $("photoPrev").hidden = true; $("photoPrev").src = "";
+  $("photoClear").hidden = true;
+}
+$("photoBtn").addEventListener("click", () => $("photoFile").click());
+$("photoClear").addEventListener("click", clearPhoto);
+$("photoFile").addEventListener("change", async e => {
+  const f = e.target.files[0]; e.target.value = "";
+  if (!f) return;
+  try {
+    photoData = await compressImage(f);
+    $("photoPrev").src = photoData; $("photoPrev").hidden = false;
+    $("photoClear").hidden = false;
+  } catch(err){ alert(err.message); }
+});
+$("postBtn").addEventListener("click", async () => {
+  const text = $("postText").value.trim();
+  if (!text && !photoData) return;
+  $("postBtn").disabled = true;
+  try {
+    const post = { uid, nick: state.together.nick, text, at: Date.now() };
+    if (photoData) post.photo = photoData;
+    await addDoc(collection(db, "groups", gid, "posts"), post);
+    $("postText").value = ""; clearPhoto();
+  } catch(e){ alert("업로드 실패: " + e.message); }
+  $("postBtn").disabled = false;
+});
+
+/* ---------- 채팅 ---------- */
+function renderChat(msgs){
+  const box = $("chatBox");
+  const nearBottom = box.scrollHeight - box.scrollTop - box.clientHeight < 80;
+  box.innerHTML = msgs.length
+    ? msgs.map(m => `<div class="msg${m.uid === uid ? " mine" : ""}">
+        <div class="m-meta">${m.uid === uid ? "" : esc(m.nick || "?") + " · "}${fmtTime(m.at)}</div>
+        ${esc(m.text)}
+      </div>`).join("")
+    : `<div class="empty">첫 메시지를 보내보세요!</div>`;
+  if (nearBottom || msgs.length <= 1) box.scrollTop = box.scrollHeight;
+}
+async function sendChat(){
+  const inp = $("chatText");
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = "";
+  try {
+    await addDoc(collection(db, "groups", gid, "chat"), { uid, nick: state.together.nick, text, at: Date.now() });
+  } catch(e){ alert("전송 실패: " + e.message); inp.value = text; }
+}
+$("chatSend").addEventListener("click", sendChat);
+$("chatText").addEventListener("keydown", e => { if (e.key === "Enter" && !e.isComposing) sendChat(); });
+
+/* ---------- 공유 캘린더 ---------- */
+function renderTgCal(){
+  if (tgCalY === undefined) return;
+  $("tgCalTitle").textContent = `${tgCalY}. ${pad(tgCalM+1)}`;
+  const first = new Date(tgCalY, tgCalM, 1);
+  const start = mondayOf(first);
+  const ds = todayStr();
+  let html = WD.map(w => `<div class="wd">${w}</div>`).join("");
+  for (let i = 0; i < 42; i++){
+    const d = addDays(start, i);
+    const s = fmt(d);
+    const out = d.getMonth() !== tgCalM;
+    const evs = evCache.filter(ev => ev.date === s);
+    const chips = evs.slice(0,2).map(ev =>
+      `<span class="ev" style="background:${ev.color}">${esc(ev.title)}</span>`
+    ).join("") + (evs.length > 2 ? `<span class="ev-more">+${evs.length-2}</span>` : "");
+    const dots = evs.length ? `<span class="ev-dots">${evs.slice(0,4).map(ev => `<i style="background:${ev.color}"></i>`).join("")}</span>` : "";
+    html += `<button class="cell${out ? " out" : ""}${s === ds ? " today" : ""}${s === tgSel ? " sel" : ""}" data-tgdate="${s}">
+      <span class="d">${d.getDate()}</span>${chips}${dots}
+    </button>`;
+  }
+  $("tgCalGrid").innerHTML = html;
+}
+function renderTgDay(){
+  if (!tgSel) return;
+  $("tgDayBox").hidden = false;
+  const d = parse(tgSel);
+  $("tgDayTitle").textContent = `${tgSel} (${WD[(d.getDay()+6)%7]})`;
+  const evs = evCache.filter(ev => ev.date === tgSel)
+    .sort((a,b) => (a.time||"99:99").localeCompare(b.time||"99:99"));
+  $("tgDayList").innerHTML = evs.length
+    ? evs.map(ev => `<div class="ev-item">
+        <span class="tg-ev-color" style="background:${ev.color}"></span>
+        ${ev.time ? `<span class="t">${ev.time}</span>` : ""}
+        <span class="n" style="cursor:default">${esc(ev.title)} <span style="color:var(--muted);font-size:11px">· ${esc(ev.nick || "?")}</span></span>
+        ${ev.uid === uid ? `<button class="icon-btn" data-tgdel="${ev.id}" aria-label="삭제">×</button>` : ""}
+      </div>`).join("")
+    : `<div class="empty" style="padding:8px 0">이 날짜에 공유 일정이 없어요.</div>`;
+}
+$("tgCalPrev").addEventListener("click", () => { tgCalM--; if (tgCalM < 0){ tgCalM = 11; tgCalY--; } renderTgCal(); });
+$("tgCalNext").addEventListener("click", () => { tgCalM++; if (tgCalM > 11){ tgCalM = 0; tgCalY++; } renderTgCal(); });
+$("tgCalGrid").addEventListener("click", e => {
+  const cell = e.target.closest("[data-tgdate]");
+  if (!cell) return;
+  tgSel = cell.dataset.tgdate;
+  renderTgCal(); renderTgDay();
+});
+$("tgDayList").addEventListener("click", async e => {
+  const b = e.target.closest("[data-tgdel]");
+  if (b && confirm("이 공유 일정을 삭제할까요?")){
+    try { await deleteDoc(doc(db, "groups", gid, "events", b.dataset.tgdel)); } catch(err){ alert("삭제 실패: " + err.message); }
+  }
+});
+$("tgEvAdd").addEventListener("click", async () => {
+  const title = $("tgEvTitle").value.trim();
+  if (!title || !tgSel) return;
+  $("tgEvAdd").disabled = true;
+  try {
+    await addDoc(collection(db, "groups", gid, "events"), {
+      date: tgSel, title, time: $("tgEvTime").value,
+      color: memberColor(uid), uid, nick: state.together.nick, at: Date.now()
+    });
+    $("tgEvTitle").value = ""; $("tgEvTime").value = "";
+  } catch(e){ alert("추가 실패: " + e.message); }
+  $("tgEvAdd").disabled = false;
+});
 </script>
 </body>
 </html>
