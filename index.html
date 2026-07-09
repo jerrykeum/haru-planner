@@ -21,6 +21,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
+/* ---------- Pretendard (로컬 폰트) ---------- */
+@font-face{ font-family:"Pretendard"; src:url("./fonts/Pretendard-Regular.woff2") format("woff2"); font-weight:400; font-display:swap }
+@font-face{ font-family:"Pretendard"; src:url("./fonts/Pretendard-Medium.woff2") format("woff2"); font-weight:500; font-display:swap }
+@font-face{ font-family:"Pretendard"; src:url("./fonts/Pretendard-SemiBold.woff2") format("woff2"); font-weight:600; font-display:swap }
+@font-face{ font-family:"Pretendard"; src:url("./fonts/Pretendard-Bold.woff2") format("woff2"); font-weight:700; font-display:swap }
+
 /* ---------- 토큰 ---------- */
 :root{
   --bg:#F6F3EC; --card:#FFFDF8; --card2:#F1EDE2;
@@ -30,8 +36,8 @@
   --doing:#B98A2E;
   --shadow:0 1px 2px rgba(43,47,40,.05), 0 6px 18px rgba(43,47,40,.06);
   --r-lg:16px; --r-md:12px; --r-sm:8px;
-  --serif:"Gowun Batang", "Noto Serif KR", serif;
-  --sans:"IBM Plex Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --serif:"Pretendard", "Apple SD Gothic Neo", sans-serif;
+  --sans:"Pretendard", "Apple SD Gothic Neo", sans-serif;
   --mono:"IBM Plex Mono", ui-monospace, monospace;
 }
 [data-theme="dark"]{
@@ -348,6 +354,52 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
 .setup-steps{ font-size:13.5px; line-height:1.9; color:var(--muted) }
 .setup-steps b{ color:var(--ink) }
 .tg-ev-color{ width:9px; height:9px; border-radius:50%; flex-shrink:0 }
+
+/* ---------- 화면 설정 모달 ---------- */
+.settings{ max-height:82vh; overflow-y:auto }
+.set-sec{ font-size:11.5px; font-weight:600; color:var(--muted); letter-spacing:.05em; margin:18px 0 8px }
+.set-sec:first-of-type{ margin-top:4px }
+.font-opts{ display:grid; grid-template-columns:1fr 1fr; gap:8px }
+.font-opts button{
+  padding:10px 8px; border-radius:var(--r-md); border:1px solid var(--line);
+  background:var(--card2); font-size:14px; text-align:center;
+}
+.font-opts button[aria-pressed="true"]{ border-color:var(--accent); background:var(--accent-soft); color:var(--accent); font-weight:600 }
+.f-pretendard{ font-family:"Pretendard",sans-serif }
+.f-classic{ font-family:"IBM Plex Sans KR",sans-serif }
+.f-gowun{ font-family:"Gowun Batang",serif }
+.f-system{ font-family:system-ui,sans-serif }
+.acc-preview{ display:flex; align-items:center; gap:10px; margin-bottom:12px; font-size:12.5px; color:var(--muted) }
+.acc-preview .swp{ width:34px; height:34px; border-radius:10px; border:1px solid var(--line); box-shadow:var(--shadow) }
+.acc-preview .hex{ margin-left:auto; font-family:var(--mono); font-size:12px }
+.slider-row{ display:flex; align-items:center; gap:10px; margin-bottom:10px }
+.slider-row label{ width:44px; font-size:12.5px; color:var(--muted); flex-shrink:0 }
+.slider-row input[type=range]{
+  flex:1; -webkit-appearance:none; appearance:none; height:14px; border-radius:999px;
+  border:1px solid var(--line); outline-offset:4px;
+}
+.slider-row input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:22px; height:22px; border-radius:50%;
+  background:#fff; border:2px solid rgba(0,0,0,.25); box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer;
+}
+.slider-row input[type=range]::-moz-range-thumb{
+  width:20px; height:20px; border-radius:50%; background:#fff; border:2px solid rgba(0,0,0,.25); cursor:pointer;
+}
+.direct-row{ display:flex; align-items:center; gap:10px; font-size:13px; color:var(--muted) }
+.direct-row input[type=color]{
+  width:44px; height:32px; border:1px solid var(--line); border-radius:var(--r-sm);
+  padding:2px; background:var(--card2); cursor:pointer;
+}
+.pal-cat{ font-size:12px; color:var(--muted); margin:10px 0 6px }
+.pal-row{ display:flex; gap:10px; flex-wrap:wrap }
+.pal-sw{
+  width:46px; height:46px; border-radius:14px; border:2px solid var(--line); position:relative; overflow:hidden;
+}
+.pal-sw[aria-pressed="true"]{ border-color:var(--ink) }
+.pal-sw span{ position:absolute; inset:0 }
+.pal-sw .l{ clip-path:polygon(0 0, 100% 0, 0 100%) }
+.pal-sw .d{ clip-path:polygon(100% 0, 100% 100%, 0 100%) }
+.pal-name{ font-size:10px; color:var(--muted); text-align:center; margin-top:3px; width:46px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
 </style>
 </head>
 <body>
@@ -357,10 +409,15 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
       <h1>하루</h1>
       <div class="date num" id="headDate"></div>
     </div>
-    <button class="theme-btn" id="themeBtn" aria-label="테마 전환">
-      <svg id="iconSun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
-      <svg id="iconMoon" viewBox="0 0 24 24" style="display:none"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
-    </button>
+    <div style="display:flex;gap:8px">
+      <button class="theme-btn" id="setBtn" aria-label="화면 설정">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09a1.7 1.7 0 0 0 1.56-1.11 1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.01A1.7 1.7 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.01a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51.95z"/></svg>
+      </button>
+      <button class="theme-btn" id="themeBtn" aria-label="테마 전환">
+        <svg id="iconSun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></svg>
+        <svg id="iconMoon" viewBox="0 0 24 24" style="display:none"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11z"/></svg>
+      </button>
+    </div>
   </header>
 
   <nav class="tabs" role="tablist">
@@ -584,7 +641,38 @@ nav.tabs button[aria-selected="true"]{ background:var(--card); color:var(--ink);
   </section>
 </div>
 
-<!-- 루틴 리캡 모달 -->
+<!-- 화면 설정 모달 -->
+<div class="recap-overlay" id="setOverlay">
+  <div class="recap settings">
+    <h3>화면 설정</h3>
+    <div class="sub2">글씨체와 포인트 색상을 취향대로 바꿔보세요</div>
+
+    <div class="set-sec">글씨체</div>
+    <div class="font-opts" id="fontOpts"></div>
+
+    <div class="set-sec">포인트 색상</div>
+    <div class="acc-preview">
+      <span class="swp" id="prevL"></span> 라이트
+      <span class="swp" id="prevD"></span> 다크
+      <span class="hex" id="prevHex"></span>
+    </div>
+    <div class="slider-row"><label>색상</label><input type="range" id="hueR" min="0" max="360" step="1"></div>
+    <div class="slider-row"><label>진하기</label><input type="range" id="satR" min="0" max="100" step="1"></div>
+    <div class="slider-row"><label>밝기</label><input type="range" id="litR" min="12" max="88" step="1"></div>
+    <div class="direct-row">
+      <input type="color" id="colorDirect" aria-label="색상 직접 선택">
+      원하는 색을 직접 골라도 라이트·다크 버전이 자동으로 만들어져요
+    </div>
+
+    <div class="set-sec">추천 색 조합</div>
+    <div id="palettes"></div>
+
+    <div class="foot">
+      <button class="btn ghost" id="setReset">기본값</button>
+      <button class="btn" id="setClose">완료</button>
+    </div>
+  </div>
+</div>
 <div class="recap-overlay" id="recapOverlay">
   <div class="recap">
     <h3>오늘 루틴은 잘 실천하셨나요?</h3>
@@ -654,6 +742,9 @@ function migrate(){
   }
   if (typeof state.log !== "object" || !state.log) state.log = {};
   if (typeof state.events !== "object" || !state.events) state.events = {};
+  if (!state.appearance || typeof state.appearance !== "object"){
+    state.appearance = { font:"pretendard", h:140, s:23, l:39, light:"#4C7A5C", dark:"#6FD6B2" };
+  }
 }
 
 /* ================= 날짜 유틸 ================= */
@@ -737,6 +828,7 @@ function applyTheme(){
   document.documentElement.dataset.theme = t;
   document.getElementById("iconSun").style.display  = t === "light" ? "" : "none";
   document.getElementById("iconMoon").style.display = t === "dark"  ? "" : "none";
+  if (state.appearance) applyAccent();
 }
 themeBtn.addEventListener("click", () => {
   const cur = document.documentElement.dataset.theme;
@@ -1141,7 +1233,7 @@ document.getElementById("hmNext").addEventListener("click", () => { hmM++; if (h
 /* ================= 백업 (내보내기 / 가져오기) ================= */
 document.getElementById("expBtn").addEventListener("click", () => {
   const data = JSON.stringify({ app: "haru-planner", version: 1, exportedAt: new Date().toISOString(),
-    routines: state.routines, log: state.log, events: state.events, theme: state.theme }, null, 2);
+    routines: state.routines, log: state.log, events: state.events, theme: state.theme, appearance: state.appearance }, null, 2);
   const blob = new Blob([data], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -1164,8 +1256,9 @@ document.getElementById("impFile").addEventListener("change", async e => {
     state.log = obj.log || {};
     state.events = obj.events || {};
     if (obj.theme) state.theme = obj.theme;
+    if (obj.appearance) state.appearance = obj.appearance;
     migrate();
-    persist(); applyTheme(); renderAll();
+    persist(); applyTheme(); applyFont(); renderAll();
     alert("가져오기 완료!");
   } catch(err){
     alert("파일을 읽지 못했어요. JSON 형식을 확인해 주세요.");
@@ -1231,6 +1324,172 @@ document.getElementById("recapNotif").addEventListener("click", async () => {
   } catch(e){}
 });
 
+/* ================= 화면 설정 (색상 + 글씨체) ================= */
+const FONTS = {
+  pretendard: { label:"Pretendard", cls:"f-pretendard", sans:'"Pretendard","Apple SD Gothic Neo",sans-serif', serif:'"Pretendard","Apple SD Gothic Neo",sans-serif' },
+  classic:    { label:"고운바탕 + Plex", cls:"f-classic", sans:'"IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif', serif:'"Gowun Batang","Noto Serif KR",serif' },
+  gowun:      { label:"고운바탕", cls:"f-gowun", sans:'"Gowun Batang","Noto Serif KR",serif', serif:'"Gowun Batang","Noto Serif KR",serif' },
+  system:     { label:"시스템 기본", cls:"f-system", sans:'system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif', serif:'system-ui,-apple-system,"Apple SD Gothic Neo",sans-serif' }
+};
+const PALETTES = [
+  { cat:"자연", items:[
+    { name:"포레스트", light:"#4C7A5C", dark:"#6FD6B2" },
+    { name:"세이지",  light:"#5F7A55", dark:"#AECB96" },
+    { name:"이끼",    light:"#6B7A33", dark:"#C9D67A" }
+  ]},
+  { cat:"바다", items:[
+    { name:"딥블루", light:"#3E6B8F", dark:"#82BCE8" },
+    { name:"청록",   light:"#2F7A78", dark:"#6FD0CC" },
+    { name:"네이비", light:"#46538A", dark:"#9FAEE8" }
+  ]},
+  { cat:"노을", items:[
+    { name:"테라코타", light:"#B85C4A", dark:"#F0A48E" },
+    { name:"코랄",     light:"#B5566B", dark:"#F2A0B4" },
+    { name:"앰버",     light:"#9C7226", dark:"#E8C36A" }
+  ]},
+  { cat:"무드", items:[
+    { name:"라벤더", light:"#75589E", dark:"#C3AAEA" },
+    { name:"플럼",   light:"#8A4A72", dark:"#DE9FC6" },
+    { name:"모카",   light:"#7A5C46", dark:"#CFAB8C" }
+  ]}
+];
+/* --- 색 변환 유틸 --- */
+function hslToRgb(h, s, l){
+  s /= 100; l /= 100;
+  const k = n => (n + h/30) % 12;
+  const a = s * Math.min(l, 1-l);
+  const f = n => l - a * Math.max(-1, Math.min(k(n)-3, Math.min(9-k(n), 1)));
+  return [f(0), f(8), f(4)].map(v => Math.round(v*255));
+}
+function rgbToHsl(r, g, b){
+  r/=255; g/=255; b/=255;
+  const mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+  let h = 0, s = 0; const l = (mx+mn)/2;
+  if (mx !== mn){
+    const d = mx-mn;
+    s = l > .5 ? d/(2-mx-mn) : d/(mx+mn);
+    if (mx === r) h = (g-b)/d + (g < b ? 6 : 0);
+    else if (mx === g) h = (b-r)/d + 2;
+    else h = (r-g)/d + 4;
+    h *= 60;
+  }
+  return [Math.round(h), Math.round(s*100), Math.round(l*100)];
+}
+const rgbToHex = (r,g,b) => "#" + [r,g,b].map(v => v.toString(16).padStart(2,"0")).join("").toUpperCase();
+const hexToRgbA = hex => [1,3,5].map(i => parseInt(hex.slice(i, i+2), 16));
+function luminance(hex){
+  const [r,g,b] = hexToRgbA(hex).map(v => { v/=255; return v <= .03928 ? v/12.92 : Math.pow((v+.055)/1.055, 2.4); });
+  return .2126*r + .7152*g + .0722*b;
+}
+const inkFor = hex => luminance(hex) > .45 ? "#1A211D" : "#FFFFFF";
+const clampN = (v, a, b) => Math.min(Math.max(v, a), b);
+/* 선택한 기준색 → 라이트/다크 테마용 자동 파생 */
+function deriveAccents(h, s, l){
+  const light = rgbToHex(...hslToRgb(h, clampN(s, 16, 92), clampN(l, 24, 52)));
+  const dark  = rgbToHex(...hslToRgb(h, clampN(Math.round(s*0.8), 24, 78), clampN(l + 26, 58, 78)));
+  return { light, dark };
+}
+function applyAccent(){
+  const ap = state.appearance;
+  const t = document.documentElement.dataset.theme;
+  const acc = t === "dark" ? ap.dark : ap.light;
+  const rs = document.documentElement.style;
+  rs.setProperty("--accent", acc);
+  rs.setProperty("--accent-ink", inkFor(acc));
+  const [r,g,b] = hexToRgbA(acc);
+  rs.setProperty("--accent-soft", `rgba(${r},${g},${b},${t === "dark" ? 0.14 : 0.12})`);
+}
+function applyFont(){
+  const f = FONTS[state.appearance.font] || FONTS.pretendard;
+  const rs = document.documentElement.style;
+  rs.setProperty("--sans", f.sans);
+  rs.setProperty("--serif", f.serif);
+}
+/* --- 설정 모달 UI --- */
+const setOverlay = document.getElementById("setOverlay");
+function openSettings(){ renderSettings(); setOverlay.classList.add("show"); }
+document.getElementById("setBtn").addEventListener("click", openSettings);
+document.getElementById("setClose").addEventListener("click", () => setOverlay.classList.remove("show"));
+setOverlay.addEventListener("click", e => { if (e.target === setOverlay) setOverlay.classList.remove("show"); });
+document.getElementById("setReset").addEventListener("click", () => {
+  state.appearance = { font:"pretendard", h:140, s:23, l:39, light:"#4C7A5C", dark:"#6FD6B2" };
+  persist(); applyFont(); applyAccent(); renderSettings();
+});
+function renderSettings(){
+  const ap = state.appearance;
+  // 글씨체
+  document.getElementById("fontOpts").innerHTML = Object.entries(FONTS).map(([k, f]) =>
+    `<button class="${f.cls}" data-font="${k}" aria-pressed="${ap.font === k}">${f.label}</button>`
+  ).join("");
+  // 슬라이더
+  document.getElementById("hueR").value = ap.h;
+  document.getElementById("satR").value = ap.s;
+  document.getElementById("litR").value = ap.l;
+  updateColorUI();
+  // 추천 조합
+  document.getElementById("palettes").innerHTML = PALETTES.map(g =>
+    `<div class="pal-cat">${g.cat}</div>
+     <div class="pal-row">${g.items.map(p =>
+       `<div><button class="pal-sw" data-pl="${p.light}" data-pd="${p.dark}"
+          aria-pressed="${ap.light === p.light && ap.dark === p.dark}" aria-label="${p.name}">
+          <span class="l" style="background:${p.light}"></span>
+          <span class="d" style="background:${p.dark}"></span>
+        </button><div class="pal-name">${p.name}</div></div>`
+     ).join("")}</div>`
+  ).join("");
+}
+function updateColorUI(){
+  const ap = state.appearance;
+  document.getElementById("prevL").style.background = ap.light;
+  document.getElementById("prevD").style.background = ap.dark;
+  document.getElementById("prevHex").textContent = `${ap.light} · ${ap.dark}`;
+  document.getElementById("colorDirect").value = rgbToHex(...hslToRgb(ap.h, ap.s, ap.l));
+  // 슬라이더 트랙 그라디언트
+  document.getElementById("hueR").style.background =
+    "linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)";
+  document.getElementById("satR").style.background =
+    `linear-gradient(90deg, ${rgbToHex(...hslToRgb(ap.h,0,ap.l))}, ${rgbToHex(...hslToRgb(ap.h,100,ap.l))})`;
+  document.getElementById("litR").style.background =
+    `linear-gradient(90deg, #000, ${rgbToHex(...hslToRgb(ap.h,ap.s,50))}, #fff)`;
+}
+function onColorChange(){
+  const ap = state.appearance;
+  ap.h = Number(document.getElementById("hueR").value);
+  ap.s = Number(document.getElementById("satR").value);
+  ap.l = Number(document.getElementById("litR").value);
+  Object.assign(ap, deriveAccents(ap.h, ap.s, ap.l));
+  applyAccent(); updateColorUI(); persist();
+  // 팔레트 선택 해제 표시
+  document.querySelectorAll(".pal-sw").forEach(b =>
+    b.setAttribute("aria-pressed", ap.light === b.dataset.pl && ap.dark === b.dataset.pd));
+}
+["hueR","satR","litR"].forEach(id => document.getElementById(id).addEventListener("input", onColorChange));
+document.getElementById("colorDirect").addEventListener("input", e => {
+  const [h,s,l] = rgbToHsl(...hexToRgbA(e.target.value));
+  const ap = state.appearance;
+  ap.h = h; ap.s = s; ap.l = l;
+  document.getElementById("hueR").value = h;
+  document.getElementById("satR").value = s;
+  document.getElementById("litR").value = clampN(l, 12, 88);
+  Object.assign(ap, deriveAccents(h, s, l));
+  applyAccent(); updateColorUI(); persist();
+});
+document.getElementById("palettes").addEventListener("click", e => {
+  const b = e.target.closest(".pal-sw");
+  if (!b) return;
+  const ap = state.appearance;
+  ap.light = b.dataset.pl; ap.dark = b.dataset.pd;
+  const [h,s,l] = rgbToHsl(...hexToRgbA(ap.light));
+  ap.h = h; ap.s = s; ap.l = l;
+  applyAccent(); persist(); renderSettings();
+});
+document.getElementById("fontOpts").addEventListener("click", e => {
+  const b = e.target.closest("[data-font]");
+  if (!b) return;
+  state.appearance.font = b.dataset.font;
+  applyFont(); persist(); renderSettings();
+});
+
 /* ================= 초기화 ================= */
 function renderAll(){ renderRoutines(); renderCalendar(); renderStats(); }
 function renderHeader(){
@@ -1241,6 +1500,7 @@ function renderHeader(){
   const saved = await store.load();
   if (saved) state = Object.assign(state, saved);
   migrate();
+  applyFont();
   applyTheme();
   initCal(); initHm();
   renderHeader();
@@ -1263,10 +1523,10 @@ if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
    (콘솔 → 프로젝트 설정 → 내 앱 → SDK 설정 및 구성 → 구성)
    비워두면 "함께" 탭에 설정 안내가 표시됩니다. */
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyCbfGRAXZ0UMtso1BO5Xi-euiPCn1bTXyk",
-  authDomain: "haru-planner-61c61.firebaseapp.com",
-  projectId: "haru-planner-61c61",
-  appId: "1:45918584805:web:b5048f980d1077554fb90c"
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  appId: ""
 };
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";

@@ -1,10 +1,14 @@
-const CACHE = "haru-planner-v3";
+const CACHE = "haru-planner-v4";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./fonts/Pretendard-Regular.woff2",
+  "./fonts/Pretendard-Medium.woff2",
+  "./fonts/Pretendard-SemiBold.woff2",
+  "./fonts/Pretendard-Bold.woff2"
 ];
 
 self.addEventListener("install", (e) => {
